@@ -1,16 +1,45 @@
 package application
 
-import "fmt"
+import (
+	"errors"
+
+	"github.com/asaskevich/govalidator"
+	uuid "github.com/satori/go.uuid"
+)
+
+func init(){
+	govalidator.SetFieldsRequiredByDefault(true)
+}
 
 
 type ProductInterface interface {
-	isValid() (bool error)
+	IsValid() (bool, error)
 	Enable() error
 	Disable() error
-	GetId() string
+	GetID() string
 	GetName() string
 	GetStatus() string
 	GetPrice() float64
+}
+
+type ProductServiceInterface interface {
+	Get(id string) (ProductInterface, error)
+	Create(name string, price float64) (ProductInterface, error)
+	Enable(product ProductInterface) (ProductInterface, error)
+	Disable(product ProductInterface) (ProductInterface, error)
+}
+
+type ProductReader interface {
+	Get(id string) (ProductInterface, error)
+}
+
+type ProductWriter interface {
+	Save(product ProductInterface) (ProductInterface, error)
+}
+
+type ProductPersistenceInterface interface {
+	ProductReader
+	ProductWriter
 }
 
 
@@ -20,14 +49,32 @@ const (
 )
 
 type Product struct {
-	ID string
-	Name string
-	Price float64
-	Status string
+	ID string `valid:"uuidv4"`
+	Name string `valid:"required"`
+	Price float64 `valid:"float,optional"`
+	Status string `valid:"required"`
 }
 
 
-func (p *Product) isValid() (bool, error){
+func (p *Product) IsValid() (bool, error){
+	if p.Status == "" {
+		p.Status = DISABLED
+	}
+
+	if p.Status != DISABLED && p.Status != ENABLED {
+		return false, errors.New("o status deve ser ativo o desativo")
+	}
+
+	if p.Price < 0 {
+		return false, errors.New("O preço deve ser maior que 0")
+	}
+
+	_,err := govalidator.ValidateStruct(p)
+
+	if err != nil {
+		return false, err
+	}
+
 	return true, nil
 }
 
@@ -37,17 +84,20 @@ func (p *Product) Enable() ( error){
 		return nil
 	}
 	
-	return fmt.Errorf("O Preço deve ser maior que zero")
+	return errors.New("o preço deve ser maior que 0 para habilitar o produto")
 
 }
 
 func (p *Product) Disable() ( error){
-
-	p.Status = DISABLED
-	return  nil
+	if(p.Price == 0) {
+		p.Status = DISABLED
+		return nil
+	}
+	
+	return errors.New("o preço deve ser 0 para desabilitar o produto")
 }
 
-func (p *Product) GetId() (string){
+func (p *Product) GetID() (string){
 	return  p.Name
 }
 
@@ -60,4 +110,13 @@ func (p *Product) GetPrice() (float64){
 
 func (p *Product) GetName() (string){
 	return  p.Name
+}
+
+func NewProduct(name string, price float64) *Product{
+	return &Product{
+		ID: uuid.NewV4().String(),
+		Status: DISABLED,
+		Name: name,
+		Price: price,
+	}
 }
