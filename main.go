@@ -1,16 +1,11 @@
+/*
+Copyright © 2024 NAME HERE <EMAIL ADDRESS>
+
+*/
 package main
 
-import (
-	"database/sql"
-
-	db2 "github.com/joaops3/go-exagonal/adapters/db"
-	"github.com/joaops3/go-exagonal/application"
-)
+import "github.com/joaops3/go-exagonal/cmd"
 
 func main() {
-	db, _ := sql.Open("sqlite3", "db.sqlite")
-
-	productDbAdapter := db2.NewProductDb(db)
-
-	application.NewProductService(productDbAdapter)
+	cmd.Execute()
 }
