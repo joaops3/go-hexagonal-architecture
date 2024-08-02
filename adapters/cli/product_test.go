@@ -5,8 +5,8 @@ import (
 	"testing"
 
 	"github.com/golang/mock/gomock"
-	"github.com/joaops3/go-exagonal/adapters/cli"
-	mock_application "github.com/joaops3/go-exagonal/application/mocks"
+	"github.com/joaops3/go-hexagonal/adapters/cli"
+	mock_application "github.com/joaops3/go-hexagonal/application/mocks"
 	"github.com/stretchr/testify/require"
 )
 

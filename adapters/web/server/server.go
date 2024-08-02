@@ -6,7 +6,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/joaops3/go-exagonal/application"
+	"github.com/codegangsta/negroni"
+	"github.com/gorilla/mux"
+	"github.com/joaops3/go-hexagonal/adapters/web/server/handler"
+	"github.com/joaops3/go-hexagonal/application"
 )
 
 type Webserver struct {
@@ -18,12 +21,12 @@ func MakeNewWebserver() *Webserver {
 }
 
 func (w Webserver) Serve() {
-	// r := mux.NewRouter()
-	// n := negroni.New(
-	// 	negroni.NewLogger(),
-	// )
-	// handler.MakeProductHandlers(r, n, w.Service)
-	// http.Handle("/", r)
+	r := mux.NewRouter()
+	n := negroni.New(
+		negroni.NewLogger(),
+	)
+	handler.MakeProductHandlers(r, n, w.Service)
+	http.Handle("/", r)
 	server := &http.Server{
 		ReadHeaderTimeout: 10 * time.Second,
 		WriteTimeout:      10 * time.Second,

@@ -5,8 +5,8 @@ import (
 	"log"
 	"testing"
 
-	db2 "github.com/joaops3/go-exagonal/adapters/db"
-	"github.com/joaops3/go-exagonal/application"
+	db2 "github.com/joaops3/go-hexagonal/adapters/db"
+	"github.com/joaops3/go-hexagonal/application"
 	"github.com/stretchr/testify/require"
 )
 

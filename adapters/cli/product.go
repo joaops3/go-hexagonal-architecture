@@ -3,7 +3,7 @@ package cli
 import (
 	"fmt"
 
-	"github.com/joaops3/go-exagonal/application"
+	"github.com/joaops3/go-hexagonal/application"
 )
 
 func Run(service application.ProductServiceInterface, action string, productId string, productName string, productPrice float64)(string , error) {

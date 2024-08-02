@@ -3,7 +3,7 @@ package db
 import (
 	"database/sql"
 
-	"github.com/joaops3/go-exagonal/application"
+	"github.com/joaops3/go-hexagonal/application"
 	_ "github.com/mattn/go-sqlite3"
 )
 
