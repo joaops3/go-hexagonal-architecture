@@ -23,5 +23,3 @@ Hexagonal Architecture, also known as **Ports and Adapters**, is a software arch
 ├── docker-compose.yml  # Docker setup
 
 ```
-
-`
